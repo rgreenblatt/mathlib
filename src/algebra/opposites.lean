@@ -299,7 +299,9 @@ See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_a
 instance _root_.has_mul.to_has_opposite_scalar [has_mul α] : has_scalar (opposite α) α :=
 { smul := λ c x, x * c.unop }
 
-@[simp] lemma op_smul_eq_mul [has_mul α] {a a' : α} : op a • a' = a' * a := rfl
+notation m ` <• `:72 a:72 := (opposite.op a) • m
+
+@[simp] lemma op_smul_eq_mul [has_mul α] {a a' : α} : a' <• a = a' * a := rfl
 
 instance _root_.semigroup.opposite_smul_comm_class [semigroup α] :
   smul_comm_class (opposite α) α α :=
