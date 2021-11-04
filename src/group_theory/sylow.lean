@@ -401,31 +401,31 @@ theorem exists_subgroup_card_pow_prime [fintype G] (p : ℕ) {n : ℕ} [fact p.p
 let ⟨K, hK⟩ := exists_subgroup_card_pow_prime_le p hdvd ⊥ (by simp) n.zero_le in
 ⟨K, hK.1⟩
 
-lemma pow_dvd_of_pow_dvd [fintype G] {p n : ℕ} [fact p.prime] (P : sylow p G)
+lemma pow_dvd_card_of_pow_dvd_card [fintype G] {p n : ℕ} [fact p.prime] (P : sylow p G)
   (hdvd : p ^ n ∣ card G) : p ^ n ∣ card P :=
 begin
   obtain ⟨Q, hQ⟩ := exists_subgroup_card_pow_prime p hdvd,
   obtain ⟨R, hR⟩ := (is_p_group.of_card hQ).exists_le_sylow,
-  obtain ⟨g, hg⟩ := exists_smul_eq G R P,
+  obtain ⟨g, rfl⟩ := exists_smul_eq G R P,
   calc p ^ n = card Q : hQ.symm
   ... ∣ card R : card_dvd_of_le hR
-  ... = card (g • R) : card_congr (R.mul_equiv (g • R)).to_equiv
-  ... = card P : by rw hg,
+  ... = card (g • R) : card_congr (R.equiv_smul g).to_equiv
 end
 
-lemma dvd_of_dvd [fintype G] {p : ℕ} [fact p.prime] (P : sylow p G)
+lemma dvd_card_of_dvd_card [fintype G] {p : ℕ} [fact p.prime] (P : sylow p G)
   (hdvd : p ∣ card G) : p ∣ card P :=
 begin
   rw ← pow_one p at hdvd,
-  have key := P.pow_dvd_of_pow_dvd hdvd,
+  have key := P.pow_dvd_card_of_pow_dvd_card hdvd,
   rwa pow_one at key,
 end
 
-lemma bot_lt_of_dvd [fintype G] {p : ℕ} [fact p.prime] (P : sylow p G) (hdvd : p ∣ card G) :
-  (P : subgroup G) ≠ ⊥ :=
+lemma ne_bot_of_dvd_card [fintype G] {p : ℕ} [hp : fact p.prime] (P : sylow p G)
+  (hdvd : p ∣ card G) : (P : subgroup G) ≠ ⊥ :=
 begin
-  have key := P.dvd_of_dvd hdvd,
-  sorry,
+  refine λ h, hp.out.not_dvd_one _,
+  have key : p ∣ card (P : subgroup G) := P.dvd_card_of_dvd_card hdvd,
+  rwa [h, card_bot] at key,
 end
 
 end sylow
