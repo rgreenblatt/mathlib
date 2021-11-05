@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import algebra.algebra.basic
-import linear_algebra.tensor_product
+import linear_algebra.tensor_product.def
 
 /-!
 # Facts about algebras involving bilinear maps and tensor products
