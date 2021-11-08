@@ -230,6 +230,7 @@ end
 /-- Do not use this lemma: It is made made obsolete by `exists_right_complement'_of_coprime` -/
 lemma step2 (K : subgroup G) [K.normal] (hK : K ≤ N) : K = ⊥ ∨ K = N :=
 begin
+  have : function.surjective (quotient_group.mk' K) := quotient.surjective_quotient_mk',
   have h4 := step1 h1 h2 h3,
   contrapose! h4,
   have h5 : fintype.card (quotient_group.quotient K) < fintype.card G,
@@ -238,9 +239,12 @@ begin
       (K.one_lt_card_iff_ne_bot.mpr h4.1) },
   have h6 : nat.coprime (fintype.card (N.map (quotient_group.mk' K)))
     (N.map (quotient_group.mk' K)).index,
-  { -- card goes down, index stays the same
-    sorry },
-  have : function.surjective (quotient_group.mk' K) := quotient.surjective_quotient_mk',
+  { have index_map := N.index_map this (by rwa quotient_group.ker_mk),
+    have index_pos : 0 < N.index := nat.pos_of_ne_zero index_ne_zero_of_fintype,
+    rw index_map,
+    refine h1.coprime_dvd_left _,
+    rw [←nat.mul_dvd_mul_iff_left index_pos, index_mul_card, ←index_map, index_mul_card],
+    exact K.card_quotient_dvd_card },
   obtain ⟨H, hH⟩ := h2 (quotient_group.quotient K) h5 h6,
   refine ⟨H.comap (quotient_group.mk' K), _, _⟩,
   { have key : (N.map (quotient_group.mk' K)).comap (quotient_group.mk' K) = N,
@@ -271,7 +275,8 @@ lemma step4 : (fintype.card N).min_fac.prime :=
 /-- Do not use this lemma: It is made made obsolete by `exists_right_complement'_of_coprime` -/
 lemma step5 {P : sylow (fintype.card N).min_fac N} : P.1 ≠ ⊥ :=
 begin
-  sorry
+  haveI : fact ((fintype.card N).min_fac.prime) := ⟨step4 h1 h2 h3⟩,
+  exact P.ne_bot_of_dvd_card (fintype.card N).min_fac_dvd,
 end
 
 /-- Do not use this lemma: It is made made obsolete by `exists_right_complement'_of_coprime` -/
