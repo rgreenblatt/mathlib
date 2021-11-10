@@ -27,25 +27,6 @@ In this file we define the complement of a subgroup.
 - `is_complement_of_coprime` : Subgroups of coprime order are complements.
 -/
 
-lemma _root_.set.exists_eq_singleton {α : Type*} {S : set α} :
-  (∃ a : α, S = {a}) ↔ (S.nonempty ∧ ∀ a b ∈ S, a = b) :=
-begin
-  refine ⟨_, λ h, _⟩,
-  { rintros ⟨a, rfl⟩,
-    refine ⟨set.singleton_nonempty a, λ b c hb hc, hb.trans hc.symm⟩ },
-  { obtain ⟨a, ha⟩ := h.1,
-    refine ⟨a, set.eq_singleton_iff_unique_mem.mpr ⟨ha, λ b hb, (h.2 b a hb ha)⟩⟩ },
-end
-
-@[to_additive] lemma _root_.subgroup.coe_eq_top {G : Type*} [group G] {H : subgroup G} :
-  (H : set G) = ⊤ ↔ H = ⊤ :=
-(set_like.ext'_iff.trans (by refl)).symm
-
-@[to_additive] lemma _root_.subgroup.coe_eq_singleton {G : Type*} [group G] {H : subgroup G} :
-  (∃ g : G, (H : set G) = {g}) ↔ H = ⊥ :=
-⟨λ ⟨g, hg⟩, by { haveI : subsingleton (H : set G) := by { rw hg, apply_instance },
-  exact H.eq_bot_of_subsingleton }, λ h, ⟨1, set_like.ext'_iff.mp h⟩⟩
-
 open_locale big_operators
 
 namespace subgroup
