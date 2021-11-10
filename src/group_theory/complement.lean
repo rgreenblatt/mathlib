@@ -95,8 +95,7 @@ end
 @[to_additive] lemma is_complement'_comm : is_complement' H K ↔ is_complement' K H :=
 ⟨is_complement'.symm, is_complement'.symm⟩
 
-@[to_additive] lemma is_complement_top_singleton {g : G} :
-  is_complement (⊤ : set G) {g} :=
+@[to_additive] lemma is_complement_top_singleton {g : G} : is_complement (⊤ : set G) {g} :=
 ⟨λ ⟨x, _, rfl⟩ ⟨y, _, rfl⟩ h, prod.ext (subtype.ext (mul_right_cancel h)) rfl,
   λ x, ⟨⟨⟨x * g⁻¹, ⟨⟩⟩, g, rfl⟩, inv_mul_cancel_right x g⟩⟩
 
@@ -107,10 +106,8 @@ end
 @[to_additive] lemma is_complement_singleton_left {g : G} : is_complement {g} S ↔ S = ⊤ :=
 begin
   refine ⟨λ h, top_le_iff.mp (λ x hx, _), λ h, (congr_arg _ h).mpr is_complement_singleton_top⟩,
-  obtain ⟨y, hy⟩ := h.2 (g * x),
-  conv_rhs at hy { rw ← (show y.1.1 = g, from y.1.2) },
-  rw ← mul_left_cancel hy,
-  exact y.2.2,
+  obtain ⟨⟨⟨z, rfl : z = g⟩, y, _⟩, hy⟩ := h.2 (g * x),
+  rwa ← mul_left_cancel hy,
 end
 
 @[to_additive] lemma is_complement_singleton_right {g : G} : is_complement S {g} ↔ S = ⊤ :=
@@ -124,7 +121,7 @@ end
 
 @[to_additive] lemma is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} :=
 begin
-  refine ⟨λ h, set.exists_eq_singleton.mpr ⟨_, λ a b ha hb, _⟩, _⟩,
+  refine ⟨λ h, set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, λ a b ha hb, _⟩, _⟩,
   { obtain ⟨a, ha⟩ := h.2 1,
     exact ⟨a.2.1, a.2.2⟩ },
   { have : (⟨⟨_, mem_top a⁻¹⟩, ⟨a, ha⟩⟩ : (⊤ : set G) × S) = ⟨⟨_, mem_top b⁻¹⟩, ⟨b, hb⟩⟩ :=
@@ -134,10 +131,9 @@ begin
     exact is_complement_top_singleton },
 end
 
-@[to_additive] lemma is_complement_top_right :
-  is_complement S ⊤ ↔ ∃ g : G, S = {g} :=
+@[to_additive] lemma is_complement_top_right : is_complement S ⊤ ↔ ∃ g : G, S = {g} :=
 begin
-  refine ⟨λ h, set.exists_eq_singleton.mpr ⟨_, λ a b ha hb, _⟩, _⟩,
+  refine ⟨λ h, set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, λ a b ha hb, _⟩, _⟩,
   { obtain ⟨a, ha⟩ := h.2 1,
     exact ⟨a.1.1, a.1.2⟩ },
   { have : (⟨⟨a, ha⟩, ⟨_, mem_top a⁻¹⟩⟩ : S × (⊤ : set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top b⁻¹⟩⟩ :=
@@ -153,16 +149,16 @@ is_complement_top_singleton
 @[to_additive] lemma is_complement'_bot_top : is_complement' (⊥ : subgroup G) ⊤ :=
 is_complement_singleton_top
 
-@[to_additive] lemma is_complement'_bot_left : is_complement' ⊥ H ↔ H = ⊤ :=
-is_complement_singleton_left.trans coe_eq_top
+@[simp, to_additive] lemma is_complement'_bot_left : is_complement' ⊥ H ↔ H = ⊤ :=
+is_complement_singleton_left.trans coe_eq_univ
 
-@[to_additive] lemma is_complement'_bot_right : is_complement' H ⊥ ↔ H = ⊤ :=
-is_complement_singleton_right.trans coe_eq_top
+@[simp, to_additive] lemma is_complement'_bot_right : is_complement' H ⊥ ↔ H = ⊤ :=
+is_complement_singleton_right.trans coe_eq_univ
 
-@[to_additive] lemma is_complement'_top_left : is_complement' ⊤ H ↔ H = ⊥ :=
+@[simp, to_additive] lemma is_complement'_top_left : is_complement' ⊤ H ↔ H = ⊥ :=
 is_complement_top_left.trans coe_eq_singleton
 
-@[to_additive] lemma is_complement'_top_right : is_complement' H ⊤ ↔ H = ⊥ :=
+@[simp, to_additive] lemma is_complement'_top_right : is_complement' H ⊤ ↔ H = ⊥ :=
 is_complement_top_right.trans coe_eq_singleton
 
 @[to_additive] lemma mem_left_transversals_iff_exists_unique_inv_mul_mem :
