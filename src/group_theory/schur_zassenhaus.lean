@@ -21,14 +21,6 @@ In this file we prove the Schur-Zassenhaus theorem.
   its index, then there exists a subgroup `K` which is a (left) complement of `H`.
 -/
 
-lemma subgroup.is_complement'.sup_eq_top {G : Type*} [group G] {H K : subgroup G}
-  (h : subgroup.is_complement' H K) : H ⊔ K = ⊤ :=
-begin
-  refine top_le_iff.mp (λ g hg, _),
-  obtain ⟨⟨h, k⟩, rfl⟩ := h.2 g,
-  exact subgroup.mul_mem_sup h.2 k.2,
-end
-
 open_locale big_operators
 
 namespace subgroup
@@ -171,7 +163,8 @@ begin
     apply_instance },
 end
 
-theorem exists_right_complement_of_coprime_aux [fintype G] [H.normal]
+/-- Do not use this lemma: It is made made obsolete by `exists_right_complement'_of_coprime` -/
+lemma exists_right_complement_of_coprime_aux [fintype G] [H.normal]
   (hH : nat.coprime (fintype.card H) H.index) :
   ∃ K : subgroup G, is_complement' H K :=
 nonempty_of_inhabited.elim
