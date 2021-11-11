@@ -316,16 +316,16 @@ begin
 end
 
 /-- **Schur-Zassenhaus** for normal subgroups:
-  If `H : subgroup G` is normal, and has order coprime to its index, then there exists
-  a subgroup `K` which is a (right) complement of `H`. -/
+  If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
+  subgroup `K` which is a (right) complement of `H`. -/
 theorem exists_right_complement'_of_coprime [fintype G]
   {N : subgroup G} [N.normal] (hN : nat.coprime (fintype.card N) N.index) :
   ∃ H : subgroup G, is_complement' N H :=
 exists_right_complement'_of_coprime_aux' rfl hN
 
 /-- **Schur-Zassenhaus** for normal subgroups:
-  If `H : subgroup G` is normal, and has order coprime to its index, then there exists
-  a subgroup `K` which is a (right) complement of `H`. -/
+  If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
+  subgroup `K` which is a (right) complement of `H`. -/
 theorem exists_right_complement'_of_coprime'
   {N : subgroup G} [N.normal] (hN : nat.coprime (nat.card N) N.index) :
   ∃ H : subgroup G, is_complement' N H :=
@@ -349,16 +349,16 @@ begin
 end
 
 /-- **Schur-Zassenhaus** for normal subgroups:
-  If `H : subgroup G` is normal, and has order coprime to its index, then there exists
-  a subgroup `K` which is a (left) complement of `H`. -/
+  If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
+  subgroup `K` which is a (left) complement of `H`. -/
 theorem exists_left_complement'_of_coprime
   [fintype G] {N : subgroup G} [N.normal] (hN : nat.coprime (fintype.card N) N.index) :
   ∃ H : subgroup G, is_complement' H N :=
 Exists.imp (λ _, is_complement'.symm) (exists_right_complement'_of_coprime hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:
-  If `H : subgroup G` is normal, and has order coprime to its index, then there exists
-  a subgroup `K` which is a (left) complement of `H`. -/
+  If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
+  subgroup `K` which is a (left) complement of `H`. -/
 theorem exists_left_complement'_of_coprime'
   {N : subgroup G} [N.normal] (hN : nat.coprime (nat.card N) N.index) :
   ∃ H : subgroup G, is_complement' H N :=
