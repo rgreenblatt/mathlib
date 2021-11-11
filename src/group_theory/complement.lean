@@ -219,11 +219,11 @@ end
 
 lemma is_complement.card_mul [fintype G] [fintype S] [fintype T] (h : is_complement S T) :
   fintype.card S * fintype.card T = fintype.card G :=
-(fintype.card_prod S T).symm.trans (fintype.card_of_bijective h)
+(fintype.card_prod _ _).symm.trans (fintype.card_of_bijective h)
 
 lemma is_complement'.card_mul [fintype G] [fintype H] [fintype K] (h : is_complement' H K) :
   fintype.card H * fintype.card K = fintype.card G :=
-is_complement.card_mul h
+h.card_mul
 
 lemma is_complement'.disjoint (h : is_complement' H K) : disjoint H K :=
 λ g hg, let x : H × K := ⟨⟨g, hg.1⟩, 1⟩, y : H × K := ⟨1, ⟨g, hg.2⟩⟩ in subtype.ext_iff.mp
