@@ -14,9 +14,9 @@ In this file we prove the Schur-Zassenhaus theorem.
 
 ## Main results
 
-- `exists_right_complement_of_coprime` : If `H : subgroup G` is normal and has order coprime to
+- `exists_right_complement'_of_coprime` : If `H : subgroup G` is normal and has order coprime to
   its index, then there exists a subgroup `K` which is a (right) complement of `H`.
-- `exists_left_complement_of_coprime` : If `H : subgroup G` is normal and has order coprime to
+- `exists_left_complement'_of_coprime` : If `H : subgroup G` is normal and has order coprime to
   its index, then there exists a subgroup `K` which is a (left) complement of `H`.
 -/
 
@@ -163,7 +163,7 @@ begin
 end
 
 /-- Do not use this lemma: It is made made obsolete by `exists_right_complement'_of_coprime` -/
-lemma exists_right_complement_of_coprime_aux [fintype G] [H.normal]
+lemma exists_right_complement'_of_coprime_aux [fintype G] [H.normal]
   (hH : nat.coprime (fintype.card H) H.index) :
   ∃ K : subgroup G, is_complement' H K :=
 nonempty_of_inhabited.elim
@@ -295,7 +295,7 @@ end
 lemma step8 : false :=
 begin
   haveI := step7 h1 h2 h3,
-  exact not_exists_of_forall_not h3 (exists_right_complement_of_coprime_aux h1),
+  exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux h1),
 end
 
 end schur_zassenhaus_induction
@@ -333,7 +333,7 @@ begin
   by_cases hN1 : nat.card N = 0,
   { rw [hN1, nat.coprime_zero_left, index_eq_one] at hN,
     rw hN,
-    exact ⟨⊥, is_complement_top_singleton⟩ },
+    exact ⟨⊥, is_complement'_top_bot⟩ },
   by_cases hN2 : N.index = 0,
   { rw [hN2, nat.coprime_zero_right] at hN,
     haveI := (cardinal.to_nat_eq_one_iff_unique.mp hN).1,
