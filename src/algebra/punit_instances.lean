@@ -5,6 +5,7 @@ Authors: Kenny Lau
 -/
 
 import algebra.module.basic
+import algebra.gcd_monoid.basic
 
 /-!
 # Instances on punit
@@ -30,12 +31,39 @@ by refine_struct
   .. };
 intros; exact subsingleton.elim _ _
 
+@[simp, to_additive] lemma one_eq : (1 : punit) = star := rfl
+@[simp, to_additive] lemma mul_eq : x * y = star := rfl
+@[simp, to_additive] lemma div_eq : x / y = star := rfl
+@[simp, to_additive] lemma inv_eq : x⁻¹ = star := rfl
+
 instance : comm_ring punit :=
 by refine
 { .. punit.comm_group,
   .. punit.add_comm_group,
   .. };
 intros; exact subsingleton.elim _ _
+
+instance : comm_cancel_monoid_with_zero punit :=
+by refine
+{ .. punit.comm_ring,
+  .. };
+intros; exact subsingleton.elim _ _
+
+instance : normalized_gcd_monoid punit :=
+by refine
+{ gcd := λ _ _, star,
+  lcm := λ _ _, star,
+  norm_unit := λ x, 1,
+  gcd_dvd_left := λ _ _, ⟨star, subsingleton.elim _ _⟩,
+  gcd_dvd_right := λ _ _, ⟨star, subsingleton.elim _ _⟩,
+  dvd_gcd := λ _ _ _ _ _, ⟨star, subsingleton.elim _ _⟩,
+  gcd_mul_lcm := λ _ _, ⟨1, subsingleton.elim _ _⟩,
+  .. };
+intros; exact subsingleton.elim _ _
+
+@[simp] lemma gcd_eq : gcd x y = star := rfl
+@[simp] lemma lcm_eq : lcm x y = star := rfl
+@[simp] lemma norm_unit_eq : norm_unit x = 1 := rfl
 
 instance : complete_boolean_algebra punit :=
 by refine
@@ -53,6 +81,17 @@ by refine
   sdiff := λ _ _, star,
   .. };
 intros; trivial <|> simp only [eq_iff_true_of_subsingleton]
+
+@[simp] lemma top_eq : (⊤ : punit) = star := rfl
+@[simp] lemma bot_eq : (⊥ : punit) = star := rfl
+@[simp] lemma sup_eq : x ⊔ y = star := rfl
+@[simp] lemma inf_eq : x ⊓ y = star := rfl
+@[simp] lemma Sup_eq : Sup s = star := rfl
+@[simp] lemma Inf_eq : Inf s = star := rfl
+@[simp] lemma compl_eq : xᶜ = star := rfl
+@[simp] lemma sdiff_eq : x \ y = star := rfl
+@[simp] protected lemma le : x ≤ y := trivial
+@[simp] lemma not_lt : ¬(x < y) := not_false
 
 instance : canonically_ordered_add_monoid punit :=
 by refine
@@ -75,21 +114,6 @@ by refine
   .. punit.comm_ring, .. };
 intros; exact subsingleton.elim _ _
 
-@[simp] lemma zero_eq : (0 : punit) = star := rfl
-@[simp, to_additive] lemma one_eq : (1 : punit) = star := rfl
-@[simp] lemma add_eq : x + y = star := rfl
-@[simp, to_additive] lemma mul_eq : x * y = star := rfl
-@[simp, to_additive] lemma div_eq : x / y = star := rfl
-@[simp] lemma neg_eq : -x = star := rfl
-@[simp, to_additive] lemma inv_eq : x⁻¹ = star := rfl
-lemma smul_eq : x • y = star := rfl
-@[simp] lemma top_eq : (⊤ : punit) = star := rfl
-@[simp] lemma bot_eq : (⊥ : punit) = star := rfl
-@[simp] lemma sup_eq : x ⊔ y = star := rfl
-@[simp] lemma inf_eq : x ⊓ y = star := rfl
-@[simp] lemma Sup_eq : Sup s = star := rfl
-@[simp] lemma Inf_eq : Inf s = star := rfl
-@[simp] protected lemma le : x ≤ y := trivial
-@[simp] lemma not_lt : ¬(x < y) := not_false
+@[simp] lemma smul_eq : x • y = star := rfl
 
 end punit
