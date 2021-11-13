@@ -17,7 +17,7 @@ commutative ring.
 universes u
 
 namespace punit
-variables (x y : punit.{u+1}) (s : set punit.{u+1})
+variables {R S : Type*} (x y : punit.{u+1}) (s : set punit.{u+1})
 
 @[to_additive]
 instance : comm_group punit :=
@@ -108,12 +108,29 @@ instance : linear_ordered_cancel_add_comm_monoid punit :=
   decidable_lt := λ _ _, decidable.false,
   .. punit.canonically_ordered_add_monoid }
 
-instance (R : Type u) [semiring R] : module R punit := module.of_core $
-by refine
-{ smul := λ _ _, star,
-  .. punit.comm_ring, .. };
+instance : has_scalar R punit :=
+{ smul := λ _ _, star }
+
+@[simp] lemma smul_eq (r : R) : r • y = star := rfl
+
+instance : smul_comm_class R S punit := ⟨λ _ _ _, subsingleton.elim _ _⟩
+
+instance [has_scalar R S] : is_scalar_tower R S punit := ⟨λ _ _ _, subsingleton.elim _ _⟩
+
+instance [has_zero R] : smul_with_zero R punit :=
+by refine { ..punit.has_scalar, .. };
 intros; exact subsingleton.elim _ _
 
-@[simp] lemma smul_eq : x • y = star := rfl
+instance [monoid R] : distrib_mul_action R punit :=
+by refine { ..punit.has_scalar, .. };
+intros; exact subsingleton.elim _ _
+
+instance [monoid_with_zero R] : mul_action_with_zero R punit :=
+by refine { .. punit.distrib_mul_action, .. };
+intros; exact subsingleton.elim _ _
+
+instance [semiring R] : module R punit := module.of_core $
+by refine { .. punit.distrib_mul_action, .. };
+intros; exact subsingleton.elim _ _
 
 end punit
