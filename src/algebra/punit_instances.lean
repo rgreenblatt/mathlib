@@ -6,6 +6,7 @@ Authors: Kenny Lau
 
 import algebra.module.basic
 import algebra.gcd_monoid.basic
+import algebra.group_ring_action
 
 /-!
 # Instances on punit
@@ -121,16 +122,16 @@ instance [has_zero R] : smul_with_zero R punit :=
 by refine { ..punit.has_scalar, .. };
 intros; exact subsingleton.elim _ _
 
-instance [monoid R] : distrib_mul_action R punit :=
+instance [monoid R] : mul_semiring_action R punit :=
 by refine { ..punit.has_scalar, .. };
 intros; exact subsingleton.elim _ _
 
 instance [monoid_with_zero R] : mul_action_with_zero R punit :=
-by refine { .. punit.distrib_mul_action, .. };
+by refine { .. punit.mul_semiring_action, .. };
 intros; exact subsingleton.elim _ _
 
 instance [semiring R] : module R punit := module.of_core $
-by refine { .. punit.distrib_mul_action, .. };
+by refine { .. punit.mul_semiring_action, .. };
 intros; exact subsingleton.elim _ _
 
 end punit
