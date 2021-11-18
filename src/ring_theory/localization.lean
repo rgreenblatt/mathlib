@@ -10,6 +10,7 @@ import ring_theory.ideal.local_ring
 import ring_theory.ideal.quotient
 import ring_theory.integral_closure
 import ring_theory.non_zero_divisors
+import ring_theory.nilpotent
 import tactic.ring_exp
 
 /-!
@@ -1441,6 +1442,42 @@ not_iff_not.mp $ by
 simpa only [@local_ring.mem_maximal_ideal S, mem_nonunits_iff, not_not]
   using is_unit_mk'_iff S I x y
 
+lemma is_prime_iff_is_prime_le (J : ideal S) :
+  J.is_prime ↔ (J.comap $ algebra_map R S).is_prime ∧ (J.comap $ algebra_map R S) ≤ I :=
+(is_prime_iff_is_prime_disjoint I.prime_compl S J).trans
+begin
+  refine and.congr_right_iff.2 (λ hJ, _),
+  rw [disjoint_iff, eq_bot_iff],
+  refine ⟨λ h x hx, _, λ h, _⟩,
+  { by_contra hx',
+    exact h ⟨hx', hx⟩ },
+  { exact le_trans (inf_le_inf_left I.prime_compl h) (le_bot_iff.2 compl_inf_eq_bot) }
+end
+
+section minimal
+
+/-- If the localization is over a minimal prime `I`, the image of `I` is the only prime -/
+lemma eq_map_of_is_prime_of_minimal [I.is_prime] [is_localization.at_prime S I]
+  (hI : ∀ (I' : ideal R), I'.is_prime → I' ≤ I → I' = I)
+  (J : ideal S) [J.is_prime] : J = I.map (algebra_map R S) :=
+let ⟨hJ, hJ'⟩ := (is_prime_iff_is_prime_le S I J).1 (by apply_instance) in
+  trans (map_comap I.prime_compl S J).symm
+    (congr_arg (ideal.map (algebra_map R S)) $ hI (J.comap $ algebra_map R S) hJ hJ')
+
+lemma is_nilpotent_of_mem_map_of_minimal [I.is_prime] [is_localization.at_prime S I]
+  (hI : ∀ (I' : ideal R), I'.is_prime → I' ≤ I → I' = I)
+  (x : S) (hx : x ∈ I.map (algebra_map R S)) : is_nilpotent x :=
+begin
+  suffices : x ∈ ideal.radical (⊥ : ideal S),
+  from this,
+  rw [ideal.radical_eq_Inf, ideal.mem_Inf],
+  intros I' hI',
+  haveI : I'.is_prime := hI'.2,
+  rwa eq_map_of_is_prime_of_minimal S I hI I',
+end
+
+end minimal
+
 end at_prime
 
 end is_localization
@@ -1449,8 +1486,6 @@ namespace localization
 
 open is_localization
 
-local attribute [instance] classical.prop_decidable
-
 variables (I : ideal R) [hI : I.is_prime]
 include hI
 
@@ -1458,7 +1493,7 @@ variables {I}
 /-- The unique maximal ideal of the localization at `I.prime_compl` lies over the ideal `I`. -/
 lemma at_prime.comap_maximal_ideal :
   ideal.comap (algebra_map R (localization.at_prime I))
-    (local_ring.maximal_ideal (localization I.prime_compl)) = I :=
+    (local_ring.maximal_ideal (localization.at_prime I)) = I :=
 ideal.ext $ λ x, by
 simpa only [ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
 
@@ -1466,7 +1501,7 @@ simpa only [ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
 it is the unique maximal ideal given by the local ring structure `at_prime.local_ring` -/
 lemma at_prime.map_eq_maximal_ideal :
   ideal.map (algebra_map R (localization.at_prime I)) I =
-    (local_ring.maximal_ideal (localization I.prime_compl)) :=
+    (local_ring.maximal_ideal (localization.at_prime I)) :=
 begin
   convert congr_arg (ideal.map _) at_prime.comap_maximal_ideal.symm,
   rw map_comap I.prime_compl
