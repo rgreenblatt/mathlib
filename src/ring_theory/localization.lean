@@ -1493,7 +1493,7 @@ variables {I}
 /-- The unique maximal ideal of the localization at `I.prime_compl` lies over the ideal `I`. -/
 lemma at_prime.comap_maximal_ideal :
   ideal.comap (algebra_map R (localization.at_prime I))
-    (local_ring.maximal_ideal (localization.at_prime I)) = I :=
+    (local_ring.maximal_ideal (localization I.prime_compl)) = I :=
 ideal.ext $ λ x, by
 simpa only [ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
 
@@ -1501,7 +1501,7 @@ simpa only [ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
 it is the unique maximal ideal given by the local ring structure `at_prime.local_ring` -/
 lemma at_prime.map_eq_maximal_ideal :
   ideal.map (algebra_map R (localization.at_prime I)) I =
-    (local_ring.maximal_ideal (localization.at_prime I)) :=
+    (local_ring.maximal_ideal (localization I.prime_compl)) :=
 begin
   convert congr_arg (ideal.map _) at_prime.comap_maximal_ideal.symm,
   rw map_comap I.prime_compl
