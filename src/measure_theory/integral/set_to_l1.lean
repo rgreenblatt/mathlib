@@ -1266,9 +1266,10 @@ begin
 end
 
 /-- Auxiliary lemma for `set_to_fun_congr_measure` -/
-lemma continuous_L1_to_L1 {μ' : measure α} (c c' : ℝ≥0∞) (hc : c ≠ ∞) (hc' : c' ≠ ∞)
+lemma continuous_L1_to_L1 [borel_space G] [second_countable_topology G]
+  {μ' : measure α} (c c' : ℝ≥0∞) (hc : c ≠ ∞) (hc' : c' ≠ ∞)
   (hc'0 : c' ≠ 0) (hμ_le : μ ≤ c • μ') (hμ'_le : μ' ≤ c' • μ) :
-  continuous (λ f : α →₁[μ] E,
+  continuous (λ f : α →₁[μ] G,
     ((integrable_iff_of_measure_le c c' hc hc' hμ_le hμ'_le f).mp
       (L1.integrable_coe_fn f)).to_L1 f) :=
 begin
@@ -1281,7 +1282,7 @@ begin
     exact ⟨lt_of_le_of_ne (zero_le _) hc'0.symm, hc'⟩, },
   intros g hfg,
   rw Lp.dist_def at hfg ⊢,
-  let h_int := λ f' : α →₁[μ] E, ((integrable_iff_of_measure_le c c' hc hc' hμ_le hμ'_le f').mp
+  let h_int := λ f' : α →₁[μ] G, ((integrable_iff_of_measure_le c c' hc hc' hμ_le hμ'_le f').mp
       (L1.integrable_coe_fn f')),
   have : snorm (integrable.to_L1 g (h_int g) - integrable.to_L1 f (h_int f)) 1 μ'
       = snorm (g - f) 1 μ',
@@ -1353,7 +1354,7 @@ begin
     rw [← set_to_fun_congr_ae hT hfg, hf_eq, set_to_fun_congr_ae hT' hfg'], },
 end
 
-lemma set_to_fun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ⊤)
+lemma set_to_fun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞)
   (hT : dominated_fin_meas_additive μ T C) (hT_smul : dominated_fin_meas_additive (c • μ) T C')
   (f : α → E) :
   set_to_fun hT f = set_to_fun hT_smul f :=
@@ -1369,7 +1370,7 @@ begin
   { rw [smul_smul, ennreal.inv_mul_cancel hc0 hc_ne_top, one_smul], },
 end
 
-lemma set_to_fun_congr_left_smul (c : ℝ≥0∞) (hc_ne_top : c ≠ ⊤)
+lemma set_to_fun_congr_left_smul (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞)
   (hT : dominated_fin_meas_additive μ T C) (hT' : dominated_fin_meas_additive (c • μ) T' C')
   (h : T = T') (f : α → E) :
   set_to_fun hT f = set_to_fun hT' f :=
@@ -1380,7 +1381,7 @@ begin
   exact set_to_fun_congr_smul_measure c hc_ne_top hT'_μ hT' f,
 end
 
-lemma set_to_fun_congr_left_smul' (c : ℝ≥0∞) (hc_ne_top : c ≠ ⊤)
+lemma set_to_fun_congr_left_smul' (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞)
   (hT : dominated_fin_meas_additive μ T C) (hT' : dominated_fin_meas_additive (c • μ) T' C')
   (h : ∀ s, measurable_set s → μ s ≠ ∞ → T s = T' s) (f : α → E) :
   set_to_fun hT f = set_to_fun hT' f :=
