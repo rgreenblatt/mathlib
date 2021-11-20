@@ -186,8 +186,7 @@ begin
   rw [pi.add_apply, ennreal.to_real_add hμs hνs, add_smul],
 end
 
-lemma weighted_smul_smul_measure {m : measurable_space α} (μ : measure α) (c : ℝ≥0∞) {s : set α}
-  (hμs : μ s ≠ ∞) :
+lemma weighted_smul_smul_measure {m : measurable_space α} (μ : measure α) (c : ℝ≥0∞) {s : set α} :
   (weighted_smul (c • μ) s : F →L[ℝ] F) = c.to_real • weighted_smul μ s :=
 begin
   ext1 x,
@@ -1182,7 +1181,7 @@ end
 
 @[simp] lemma integral_zero_measure {m : measurable_space α} (f : α → E) :
   ∫ x, f x ∂(0 : measure α) = 0 :=
-norm_le_zero_iff.1 $ le_trans (norm_integral_le_lintegral_norm f) $ by simp
+set_to_fun_measure_zero (dominated_fin_meas_additive_weighted_smul _) rfl
 
 @[simp] lemma integral_smul_measure (f : α → E) (c : ℝ≥0∞) :
   ∫ x, f x ∂(c • μ) = c.to_real • ∫ x, f x ∂μ :=
@@ -1198,7 +1197,7 @@ begin
   -- Main case: `c < ∞`
   simp_rw [integral_eq_set_to_fun, ← set_to_fun_smul_left],
   refine (set_to_fun_congr_left_smul' c hc _ _ (λ s hs hμs, _) f).symm,
-  exact (weighted_smul_smul_measure _ _ hμs).symm,
+  exact (weighted_smul_smul_measure μ c).symm,
 end
 
 lemma integral_map_of_measurable {β} [measurable_space β] {φ : α → β} (hφ : measurable φ)
